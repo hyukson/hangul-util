@@ -1,15 +1,12 @@
 {
   "name": "hangul-util",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "author": {
     "name": "Jang Hyuk Soo",
     "email": "hyuksoo128@gmail.com"
   },
   "description": "Korean Hangul Utils",
-  "main": "./dist/index.js",
-  "directories": {
-    "test": "test"
-  },
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest --colors",
     "build": "jest && tsc --build",
@@ -35,9 +32,7 @@
   },
   "homepage": "https://github.com/hyukson/hangul-util#readme",
   "files": [
-    "./dist",
-    "!/dist/test",
-    "README.md"
+    "dist"
   ],
   "devDependencies": {
     "@types/jest": "^29.4.0",
