@@ -1,26 +1,44 @@
 {
-  "name": "hangul-utils",
-  "version": "1.0.0",
-  "description": "한글 관련 자바스크립트 유틸 라이브러리입니다.",
-  "main": "babel.config.js",
+  "name": "hangul-util",
+  "version": "0.0.0",
+  "author": {
+    "name": "Jang Hyuk Soo",
+    "email": "hyuksoo128@gmail.com"
+  },
+  "description": "Korean Hangul Utils",
+  "main": "./dist/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "jest",
-    "build": "jest && build"
+    "test": "jest --colors",
+    "build": "jest && tsc --build",
+    "prepare": "jest && rm -rf dist && tsc --build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hyukson/hangul-utils.git"
+    "url": "git+https://github.com/hyukson/hangul-util.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "Hangul",
+    "javascript",
+    "typescript",
+    "korean",
+    "sort",
+    "distance",
+    "match",
+    "한글"
+  ],
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hyukson/hangul-utils/issues"
+    "url": "https://github.com/hyukson/hangul-util/issues"
   },
-  "homepage": "https://github.com/hyukson/hangul-utils#readme",
+  "homepage": "https://github.com/hyukson/hangul-util#readme",
+  "files": [
+    "./dist",
+    "!/dist/test",
+    "README.md"
+  ],
   "devDependencies": {
     "@types/jest": "^29.4.0",
     "jest": "^29.5.0",
