@@ -1,15 +1,23 @@
-import { JUNG_HANGUL } from "./constant";
+import { JUNG_START_CHARCODE, JUNG_END_CHARCODE } from "./constant";
 
-export function isJung(cho: string) {
-  return JUNG_HANGUL.indexOf(cho) !== -1;
+export function isJungByCode(jung: number = 0) {
+  return JUNG_START_CHARCODE <= jung && jung <= JUNG_END_CHARCODE;
 }
 
-export function isJungByGroups(word: string) {
-  let index = 0;
-
-  while (word.length > index) {
-    if (!isJung(word[index++])) return false;
+export function isJung(word: string = "") {
+  for (let index = 0; index < word.length; index++) {
+    if (!isJungByCode(word.charCodeAt(index))) return false;
   }
 
-  return true;
+  return !!word;
+}
+
+export function isJungByGroups(word: string = "") {
+  const result: boolean[] = [];
+
+  for (let index = 0; index < word.length; index++) {
+    result.push(isJungByCode(word.charCodeAt(index)));
+  }
+
+  return result;
 }

@@ -1,15 +1,18 @@
-import { CHO_HANGUL } from "./constant";
+import { JONG_COMPLETE_HANGUL } from "./constant";
+import { isJongByCode } from "./isJong";
 
-export function isCho(cho: string) {
-  return CHO_HANGUL.indexOf(cho) !== -1;
+export function isChoByChar(cho: string = "") {
+  return isJongByCode(cho.charCodeAt(0)) && !JONG_COMPLETE_HANGUL[cho];
 }
 
-export function isChoByGroups(word: string) {
-  let index = 0;
-
-  while (word.length > index) {
-    if (!isCho(word[index++])) return false;
+export function isCho(word: string = "") {
+  for (let index = 0; index < word.length; index++) {
+    if (!isChoByChar(word[index])) return false;
   }
 
-  return true;
+  return !!word;
+}
+
+export function isChoByGroups(word: string = "") {
+  return word.split('').map(isChoByChar);
 }
