@@ -8,6 +8,14 @@
 npm i hangul-util
 ```
 
+```ts
+// ts
+import { divideHangul } from "hangul-util";
+
+// js
+const { divideHangul } = require('hangul-util');
+```
+
 ## Functions
 
 - 한글 분리 [ divide ]
