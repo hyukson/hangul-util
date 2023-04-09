@@ -18,19 +18,19 @@ const { divideHangul } = require('hangul-util');
 
 ## Functions
 
-- 한글 분리 [ divide ]
-- 한글 결합 [ combine ]
-- 초성 검색 [ includesByCho ]
-- 비슷한 단어 찾기 [ correctByDistance ]
-- 문자 정렬 [ sortHangul ]
-- 한영 변환 [ convertKey ]
-- 한글 영어발음 변환 [ normalize ]
-- 숫자 변환 [ formatNumber ]
-- 날짜 포맷 [ formatDate ]
-- 조사 [ josa ]
-- 문자 암호화 [ encode, decode ]
-- 사용된 언어 감지 [ getLocal ]
-- 한글 판별 [ isHangul, isCho, isJung, isJong ] <br/><br/>
+- [한글 분리](https://github.com/hyukson/hangul-util#%ED%95%9C%EA%B8%80-%EB%B6%84%EB%A6%AC) [ divide ]
+- [한글 결합](https://github.com/hyukson/hangul-util#%ED%95%9C%EA%B8%80-%EA%B2%B0%ED%95%A9) [ combine ]
+- [초성 검색](https://github.com/hyukson/hangul-util#%EC%B4%88%EC%84%B1%EA%B2%80%EC%83%89) [ includesByCho ]
+- [비슷한 단어 찾기](https://github.com/hyukson/hangul-util#%EB%B9%84%EC%8A%B7%ED%95%9C-%EB%8B%A8%EC%96%B4-%EC%B0%BE%EA%B8%B0) [ correctByDistance ]
+- [문자 정렬](https://github.com/hyukson/hangul-util#%EB%AC%B8%EC%9E%90-%EC%A0%95%EB%A0%AC) [ sortHangul ]
+- [한영 변환](https://github.com/hyukson/hangul-util#%ED%95%9C%EC%98%81-%EB%B3%80%ED%99%98) [ convertKey ]
+- [한글 발음 변환](https://github.com/hyukson/hangul-util#%ED%95%9C%EA%B8%80-%EB%B0%9C%EC%9D%8C-%ED%8C%8C%EC%8B%B1) [ normalize ]
+- [숫자 변환](https://github.com/hyukson/hangul-util#%EC%88%AB%EC%9E%90%EB%A5%BC-%ED%95%9C%EA%B8%80%EB%A1%9C) [ formatNumber ]
+- [날짜 포맷](https://github.com/hyukson/hangul-util#%EB%82%A0%EC%A7%9C-%ED%8F%AC%EB%A7%B7) [ formatDate ]
+- [조사](https://github.com/hyukson/hangul-util#%EC%A1%B0%EC%82%AC) [ josa ]
+- [문자 암호화](https://github.com/hyukson/hangul-util#%EB%AC%B8%EC%9E%90-%EC%95%94%ED%98%B8%ED%99%94) [ encode, decode ]
+- [언어 감지](https://github.com/hyukson/hangul-util#%EC%96%B8%EC%96%B4-%EA%B5%AC%EB%B3%84) [ getLocal ]
+- [한글 판별](https://github.com/hyukson/hangul-util#ishangul-ischo-isjung-isjong) [ isHangul, isCho, isJung, isJong ] <br/><br/>
 
 ## 한글 분리
 
