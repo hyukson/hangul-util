@@ -12,7 +12,7 @@ npm i hangul-util
 // ts
 import { divideHangul } from "hangul-util";
 
-// js
+// nodejs
 const { divideHangul } = require('hangul-util');
 ```
 
