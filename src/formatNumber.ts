@@ -26,6 +26,10 @@ export function formatNumberAll(format: number | string | null = "") {
 
   return chunkAtEnd(String(format), 4)
     .reduce((acc, item, index) => {
+      if (!Number(item)) {
+        return acc;
+      }
+
       let numberUnit = "";
 
       const zeroItem = zeroPad(item, 4);
