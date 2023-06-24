@@ -99,7 +99,7 @@ function combineLoop(wordList: string[]) {
 }
 
 export function combineHangul(str: string | (string | string[])[] = "") {
-  const word = typeof str === "string" ? str.split("") : str;
+  const word = typeof str === "string" ? str.toString().split("") : str;
 
   // Group 형식일 때, [ ['ㄱㅏ'], 'ㄴㅏ', ['ㄷ', 'ㅏ'] ]
   const result: string[] = [];
@@ -109,7 +109,7 @@ export function combineHangul(str: string | (string | string[])[] = "") {
     const item = word[index];
 
     if (typeof item === "string") {
-      _temp.push(...item.split(""));
+      _temp.push(...item.toString().split(""));
     } else {
       result.push(
         combineLoop(_temp.splice(0)).concat(

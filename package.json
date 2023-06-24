@@ -11,7 +11,7 @@
   "scripts": {
     "test": "jest --colors",
     "build": "jest && tsc --build",
-    "babel": "npx babel src --out-dir dist --extensions .ts --copy-files --source-maps --verbose",
+    "babel": "npx babel src --out-dir dist --extensions .ts --copy-files --verbose",
     "prepare": "jest && rm -rf dist && tsc --build && yarn babel"
   },
   "repository": {

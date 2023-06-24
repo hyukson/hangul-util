@@ -56,11 +56,15 @@ export function divideHangulByGroups(
   const isSplit = option?.isSplit ?? true;
   const resultType = option?.resultType ?? "array";
 
-  return word.split("").map((char) => divide(char, { isSplit, resultType }));
+  return word
+    .toString()
+    .split("")
+    .map((char) => divide(char, { isSplit, resultType }));
 }
 
 export function divideHangul(word: string = "", isSplit: boolean = true) {
   const divided = word
+    .toString()
     .split("")
     .map((char) => divide(char, { isSplit, resultType: "string" }))
     .join("");

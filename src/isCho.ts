@@ -14,5 +14,5 @@ export function isCho(word: string = "") {
 }
 
 export function isChoByGroups(word: string = "") {
-  return word.split('').map(isChoByChar);
+  return word.toString().split("").map(isChoByChar);
 }

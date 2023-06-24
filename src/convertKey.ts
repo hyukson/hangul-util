@@ -8,6 +8,7 @@ const REVERSE_MAPS: Record<string, string> = reverseByObject(KEY_MAPS);
 
 function toKo(english: string = "") {
   return english
+    .toString()
     .split("")
     .map((char) => REVERSE_MAPS[char] || char)
     .join("");
@@ -15,6 +16,7 @@ function toKo(english: string = "") {
 
 function toEn(korean: string = "") {
   return korean
+    .toString()
     .split("")
     .map((char) => KEY_MAPS[char] || char)
     .join("");
@@ -25,7 +27,9 @@ export function convertKey(
   toLanguage: LocalTypes = "ko",
   isCombine: boolean = true
 ) {
-  const hangul = (isCombine ? divideHangul(word) : word.split("")).join("");
+  const hangul = (
+    isCombine ? divideHangul(word) : word.toString().split("")
+  ).join("");
 
   // 한타로 변환
   if (toLanguage === "ko") {
