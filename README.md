@@ -1,6 +1,18 @@
 # hangul-util
 
-한글의 자모음의 분리,결합,검색 및 날짜와 숫자를 한글로 변환하는 등의 한글 기능 라이브러리입니다.
+한글의 자모음의 분리,결합,검색 및 날짜와 숫자를 한글로 변환하는 등의 한글 기능 라이브러리입니다. <br/><br/>
+
+## 번들링 된 파일
+
+```html
+<!-- Bundle File Path -->
+<script src="https://unpkg.com/hangul-util/dist/bundle.js"></script>
+```
+
+```js
+// window.H
+H.includesByCho("ㅅㄱ", "사과");
+```
 
 ## Install
 
@@ -13,7 +25,7 @@ npm i hangul-util
 import { divideHangul } from "hangul-util";
 
 // nodejs
-const { divideHangul } = require('hangul-util');
+const { divideHangul } = require("hangul-util");
 ```
 
 ## Functions
