@@ -1,9 +1,13 @@
 import { chunkAtEnd, isNumber, zeroPad } from "./utils";
-import { numberUnits, tenUnits, thousandUnits } from "./constant";
+import { numberUnits, tenUnits, thousandUnits, OVER_DIGIT } from "./constant";
 
 export function formatNumber(format: number | string | null = "") {
   if (!isNumber(Number(format))) {
     return "";
+  }
+
+  if (String(format).length > OVER_DIGIT) {
+    return "범위초과";
   }
 
   return chunkAtEnd(String(format), 4)
@@ -22,6 +26,10 @@ export function formatNumber(format: number | string | null = "") {
 export function formatNumberAll(format: number | string | null = "") {
   if (!isNumber(Number(format))) {
     return "";
+  }
+
+  if (String(format).length > OVER_DIGIT) {
+    return "범위초과";
   }
 
   return chunkAtEnd(String(format), 4)

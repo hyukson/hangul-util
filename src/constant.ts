@@ -71,7 +71,28 @@ export const numberUnits = ["", "일", "이", "삼", "사", "오", "육", "칠",
 
 export const tenUnits = ["", "십", "백", "천"];
 
-export const thousandUnits = ["", "만", "억", "조", "경", "해"];
+export const thousandUnits = [
+  "",
+  "만",
+  "억",
+  "조",
+  "경",
+  "해",
+  "자",
+  "양",
+  "구",
+  "간",
+  "정",
+  "재",
+  "극",
+  "항하사",
+  "아승기",
+  "나유타",
+  "불가사의",
+  "무량대수",
+];
+
+export const OVER_DIGIT = thousandUnits.length * tenUnits.length;
 
 // use formatDate function
 export const WEEK_DAY = ["일", "월", "화", "수", "목", "금", "토"];
