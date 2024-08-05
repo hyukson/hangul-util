@@ -28,6 +28,7 @@ describe("formatNumber", () => {
   });
 
   test("숫자가 아닌 값", () => {
+    expect(formatNumber("")).toEqual("");
     expect(formatNumber("abc")).toEqual("");
     expect(formatNumber(null)).toEqual("");
     expect(formatNumber(undefined)).toEqual("");
@@ -119,7 +120,26 @@ describe("formatNumberAll", () => {
     ).toEqual("범위초과");
   });
 
+  test("소수점, 콤마", () => {
+    expect(formatNumber("56320563256.1000")).toEqual(
+      "563억 2056만 3256 점 1000"
+    );
+    expect(formatNumberAll("56320563256.1000")).toEqual(
+      "오백육십삼억 이천오십육만 삼천이백오십육 점 천"
+    );
+    expect(formatNumber("42,563,205,632.1212")).toEqual(
+      "425억 6320만 5632 점 1212"
+    );
+    expect(formatNumberAll("42,563,205,632.1212")).toEqual(
+      "사백이십오억 육천삼백이십만 오천육백삼십이 점 천이백십이"
+    );
+    expect(formatNumberAll("400.12")).toEqual("사백 점 십이");
+    expect(formatNumberAll("400.")).toEqual("사백 점");
+    expect(formatNumberAll(".")).toEqual("점");
+  });
+
   test("숫자가 아닌 값", () => {
+    expect(formatNumberAll("")).toEqual("");
     expect(formatNumberAll("abc")).toEqual("");
     expect(formatNumberAll(null)).toEqual("");
     expect(formatNumberAll(undefined)).toEqual("");
