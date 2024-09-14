@@ -22,8 +22,8 @@ export function zeroPad(
   pow: number = 0,
   pad: string = "0"
 ) {
-  let result = String(string);
-  const padString = String(pad);
+  let result = string.toString();
+  const padString = pad.toString();
 
   for (let i = pow - result.length; i > 0; i--) {
     result = padString + result;
