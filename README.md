@@ -172,6 +172,17 @@ formatDate(new Date("2022-02-22 22:22:22"));
 
 formatDate("2022-02-22", "YYYY년 MM월 DD일");
 // 2022년 02월 22일
+
+/**
+ * formatStyle
+ * YY - 22, YYYY - 2022
+ * M: 2, MM: 02,
+ * D: 2, DD: 02,
+ * d: 3, dd: '화',
+ * H: 2, HH: 02,
+ * m: 2, mm: 02,
+ * s: 2, ss: 02,
+ */
 ```
 
 날짜를 주어진 `formatStyle` 형식에 맞춰서 변환시켜줍니다. <br/><br/>
