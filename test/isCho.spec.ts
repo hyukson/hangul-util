@@ -48,7 +48,7 @@ describe("isCho", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('ㄱ').join('')
+    const input = new Array(3000000).fill('ㄱ').join('')
     expect(isCho(input)).toEqual(true);
   });
 });
@@ -71,8 +71,8 @@ describe("isChoByGroups", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('ㄱ').join('')
-    const result = new Array(1000000).fill(true);
+    const input = new Array(2000000).fill('ㄱ').join('')
+    const result = new Array(2000000).fill(true);
     expect(isChoByGroups(input)).toEqual(result);
   });
 });

@@ -20,8 +20,8 @@ describe("normalize", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(100000).fill('사과! 그리고 sagwa!').join('');
-    const result = new Array(100000).fill('sa gwa ! geu ri go sagwa!').join('');  
+    const input = new Array(500000).fill('사과! 그리고 sagwa!').join('');
+    const result = new Array(500000).fill('sa gwa ! geu ri go sagwa!').join('');  
     expect(normalize(input)).toEqual(result);
   });
 });

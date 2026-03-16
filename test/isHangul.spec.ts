@@ -30,7 +30,7 @@ describe("isHangul", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('값').join('')
+    const input = new Array(3000000).fill('값').join('')
     expect(isHangul(input)).toEqual(true);
   });
 });
@@ -73,8 +73,8 @@ describe("isHangulByGroups", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('값').join('')
-    const result = new Array(1000000).fill(true);
+    const input = new Array(2000000).fill('값').join('')
+    const result = new Array(2000000).fill(true);
     expect(isHangulByGroups(input)).toEqual(result);
   });
 });

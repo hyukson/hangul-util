@@ -131,8 +131,16 @@ describe("combineHangul", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill("ㄱㅏㅂㅅ").join("");
-    const result = new Array(1000000).fill("값").join("");
+    const input = new Array(3000000).fill("ㄱㅏㅂㅅ").join("");
+    const result = new Array(3000000).fill("값").join("");
+    expect(combineHangul(input)).toEqual(result);
+  });
+
+  test("시간초과 테스트(다양한 자모)", () => {
+    const patterns = ["ㄱㅏㅂㅅ", "ㅎㅏㄴ", "ㄱㅡㄹ", "ㅁㅏㄹ", "ㅂㅏㅂ"];
+    const results = ["값", "한", "글", "말", "밥"];
+    const input = patterns.map((p) => new Array(600000).fill(p).join("")).join("");
+    const result = results.map((r) => new Array(600000).fill(r).join("")).join("");
     expect(combineHangul(input)).toEqual(result);
   });
 });

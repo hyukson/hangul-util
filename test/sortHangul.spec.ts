@@ -152,9 +152,23 @@ describe("sortByDESC", () => {
   });
 
   test("시간초과 테스트", () => {
-    const array = new Array(9000000).fill({ name: "apple", age: 242 });
+    const array = new Array(15000000).fill({ name: "apple", age: 242 });
 
     expect(sortByDESC(array, "name")).toEqual(array);
+  });
+
+  test("시간초과 테스트(다양한 데이터)", () => {
+    const names = ["가나다", "라마바", "사아자", "차카타", "파하", "강원도", "서울시", "부산광역시", "대전시", "인천시"];
+    const array = Array.from({ length: 500000 }, (_, i) => ({
+      name: names[i % names.length],
+      age: i % 100,
+    }));
+
+    const collator = Intl.Collator("ko");
+    const sorted = sortByDESC(array, "name");
+    for (let i = 1; i < sorted.length; i++) {
+      expect(collator.compare(sorted[i - 1].name, sorted[i].name) >= 0).toBe(true);
+    }
   });
 });
 

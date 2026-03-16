@@ -32,7 +32,7 @@ describe("formatNumber", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(40000).fill("감!사3합$니다.").join('');
+    const input = new Array(50000).fill("감!사3합$니다.").join('');
     expect(decode(encode(input))).toEqual(input);
   });
 });

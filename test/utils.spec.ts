@@ -93,8 +93,8 @@ describe("zeroPad", () => {
   });
 
   test("시간초과 테스트", () => {
-    const result = new Array(10000000).fill("0").join("");
-    expect(zeroPad("", 10000000)).toEqual(result);
+    const result = new Array(15000000).fill("0").join("");
+    expect(zeroPad("", 15000000)).toEqual(result);
   });
 });
 
@@ -119,8 +119,8 @@ describe("chunkAtEnd", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(400000).fill("0101").join("");
-    const result = new Array(400000).fill(['1', '0', '1', '0']).flat();
+    const input = new Array(500000).fill("0101").join("");
+    const result = new Array(500000).fill(['1', '0', '1', '0']).flat();
     expect(chunkAtEnd(input, 1)).toEqual(result);
   });
 });

@@ -36,4 +36,12 @@ describe("convertKey", () => {
     const result = new Array(1000000).fill("ㅗㄷㅣㅣㅐ ㅈㅐㄱㅣㅇ!").join('')
     expect(convertKey(input, "ko", false)).toEqual(result);
   });
+
+  test("시간초과 테스트(다양한 입력)", () => {
+    const patterns = ["ㅗㄷㅣㅣㅐ ㅈㅐㄱㅣㅇ!", "ㅎㅏㄴ ㄱㅡㄹ ", "ㅇㅠㅌㅣㄹ "];
+    const results = ["hello world!", "gks rmf ", "dbxlf "];
+    const input = patterns.map((p) => new Array(300000).fill(p).join("")).join("");
+    const result = results.map((r) => new Array(300000).fill(r).join("")).join("");
+    expect(convertKey(input, "en")).toEqual(result);
+  });
 });

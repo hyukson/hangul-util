@@ -162,8 +162,8 @@ describe("divideHangul", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = divideHangul(new Array(100000).fill("값쉛").join(""));
-    const result = new Array(100000).fill("ㄱㅏㅂㅅㅅㅜㅔㄹㅂ").join('').split('');
+    const input = divideHangul(new Array(300000).fill("값쉛").join(""));
+    const result = new Array(300000).fill("ㄱㅏㅂㅅㅅㅜㅔㄹㅂ").join('').split('');
     expect(input).toEqual(result);
   });
 });

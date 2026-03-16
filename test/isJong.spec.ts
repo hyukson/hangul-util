@@ -43,7 +43,7 @@ describe("isJong", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('ㅂ').join('')
+    const input = new Array(3000000).fill('ㅂ').join('')
     expect(isJong(input)).toEqual(true);
   });
 });
@@ -61,8 +61,8 @@ describe("isJongByGroups", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('ㄳ').join('')
-    const result = new Array(1000000).fill(true);
+    const input = new Array(2000000).fill('ㄳ').join('')
+    const result = new Array(2000000).fill(true);
     expect(isJongByGroups(input)).toEqual(result);
   });
 });

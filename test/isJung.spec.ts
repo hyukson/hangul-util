@@ -28,7 +28,7 @@ describe("isJung", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('ㅜ').join('')
+    const input = new Array(3000000).fill('ㅜ').join('')
     expect(isJung(input)).toEqual(true);
   });
 });
@@ -47,8 +47,8 @@ describe("isJungByGroups", () => {
   });
 
   test("시간초과 테스트", () => {
-    const input = new Array(1000000).fill('ㅏ').join('')
-    const result = new Array(1000000).fill(true);
+    const input = new Array(2000000).fill('ㅏ').join('')
+    const result = new Array(2000000).fill(true);
     expect(isJungByGroups(input)).toEqual(result);
   });
 });

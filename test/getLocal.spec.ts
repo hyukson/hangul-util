@@ -116,7 +116,7 @@ describe("getLocalByGroups", () => {
   });
 
   test("시간초과 테스트", () => {
-    const word = new Array(1000000).fill("안녕하세요! Hello, world! 1234 #").join('');
+    const word = new Array(3000000).fill("안녕하세요! Hello, world! 1234 #").join('');
     const result = getLocalByGroups(word, true);
     expect(result).toEqual({
       ko: 18.52,

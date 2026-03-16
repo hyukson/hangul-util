@@ -29,6 +29,22 @@ export function getLocal(word: string = "") {
   return "etc";
 }
 
+function getLocalByCode(code: number): LocalTypes {
+  if (
+    (code >= 0xAC00 && code <= 0xD7A3) ||
+    (code >= 0x3131 && code <= 0x314E) ||
+    (code >= 0x314F && code <= 0x3163)
+  ) return "ko";
+  if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122)) return "en";
+  if (code >= 48 && code <= 57) return "number";
+  if (
+    code === 32 || code === 9 || code === 10 || code === 13 ||
+    (code >= 33 && code <= 47) || (code >= 58 && code <= 64) ||
+    (code >= 91 && code <= 96) || (code >= 123 && code <= 126)
+  ) return "special";
+  return "etc";
+}
+
 export function getLocalByGroups(
   word: string = "",
   isPercent: boolean = false,
@@ -40,11 +56,11 @@ export function getLocalByGroups(
     special: 0,
     etc: 0,
   };
-  
+
   const result: string[] = [];
 
   for (let index = 0; index < word.length; index++) {
-    const language = getLocal(word[index]);
+    const language = getLocalByCode(word.charCodeAt(index));
 
     if (isPercent) {
       countObject[language]++;

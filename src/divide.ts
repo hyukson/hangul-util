@@ -63,13 +63,15 @@ export function divideHangulByGroups(
 }
 
 export function divideHangul(word: string = "", isSplit: boolean = true) {
-  const divided = word
-    .toString()
-    .split("")
-    .map((char) => divide(char, { isSplit, resultType: "string" }))
-    .join("");
+  const str = word.toString();
+  const result: string[] = [];
 
-  return divided.split("");
+  for (let i = 0; i < str.length; i++) {
+    const divided = divide(str[i], { isSplit, resultType: "string" }) as string;
+    for (let j = 0; j < divided.length; j++) result.push(divided[j]);
+  }
+
+  return result;
 }
 
 export function divideByJung(jung: string) {

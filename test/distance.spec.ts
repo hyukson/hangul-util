@@ -17,6 +17,15 @@ describe("getDistance", () => {
 
     expect(getDistance(input, input2)).toEqual(10000);
   });
+
+  test("시간초과 테스트(다양한 문자)", () => {
+    const chars1 = ["팝", "핍", "펍", "쉽", "깊"];
+    const chars2 = ["핍", "쉽", "깊", "팝", "펍"];
+    const input = chars1.map((c) => new Array(2000).fill(c).join("")).join("");
+    const input2 = chars2.map((c) => new Array(2000).fill(c).join("")).join("");
+
+    expect(getDistance(input, input2)).toEqual(8000);
+  });
 });
 
 describe("correctByDistance", () => {
