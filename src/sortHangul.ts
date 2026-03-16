@@ -1,6 +1,6 @@
 import { splitByKey, getNestedProperty, reverseByObject } from "./utils";
 
-const intlCollator = Intl.Collator();
+const intlCollator = Intl.Collator("ko");
 
 function baseCompare(str1: any, str2: any, orderASC: boolean) {
   if (orderASC) {
