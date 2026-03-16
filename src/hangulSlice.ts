@@ -11,6 +11,16 @@ import {
 import { isHangulByCode } from "./isHangul";
 import { combineByCode } from "./combine";
 
+const reverseJung: Record<string, string> = {};
+for (const [k, v] of Object.entries(JUNG_COMPLETE_HANGUL)) {
+  reverseJung[v] = k;
+}
+
+const reverseJong: Record<string, string> = {};
+for (const [k, v] of Object.entries(JONG_COMPLETE_HANGUL)) {
+  reverseJong[v] = k;
+}
+
 /**
  * 한글을 자모 단위로 분해하여 배열 반환 (타이핑/슬라이스용)
  * 복합 모음/자음도 분해
@@ -116,10 +126,6 @@ function assembleJamos(jamos: string[]): string {
     // 복합 중성 확인
     if (i < jamos.length) {
       const combined = nextChar + jamos[i];
-      const reverseJung: Record<string, string> = {};
-      for (const [k, v] of Object.entries(JUNG_COMPLETE_HANGUL)) {
-        reverseJung[v] = k;
-      }
       if (reverseJung[combined]) {
         const combJungIndex = JUNG_HANGUL.indexOf(reverseJung[combined]);
         if (combJungIndex !== -1) {
@@ -147,10 +153,6 @@ function assembleJamos(jamos: string[]): string {
           // 복합 종성 확인
           if (i < jamos.length) {
             const nextJong = jongChar + jamos[i];
-            const reverseJong: Record<string, string> = {};
-            for (const [k, v] of Object.entries(JONG_COMPLETE_HANGUL)) {
-              reverseJong[v] = k;
-            }
             if (reverseJong[nextJong]) {
               const combJongIndex = JONG_HANGUL.indexOf(reverseJong[nextJong]);
               if (combJongIndex !== -1) {

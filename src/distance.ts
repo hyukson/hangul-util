@@ -13,32 +13,33 @@ export function getDistance(first: string, second: string): number {
   if (!first) return second.length;
   if (!second) return first.length;
 
-  if (memo[first + '||' + second]) {
-    return memo[first + '||' + second];
-  }
+  const key = first + '||' + second;
+  if (memo[key]) return memo[key];
 
-  const getDistance: number[][] = [[]];
+  const m = first.length;
+  const n = second.length;
 
-  // 초기값 설정
-  for (let j = 0; j <= second.length; j++) {
-    getDistance[0][j] = j;
-  }
+  let prev = new Array(n + 1);
+  let curr = new Array(n + 1);
 
-  for (let i = 1; i <= first.length; i++) {
-    getDistance[i] = [i];
+  for (let j = 0; j <= n; j++) prev[j] = j;
 
-    for (let j = 1; j <= second.length; j++) {
-      getDistance[i][j] = minBy(
-        getDistance[i - 1][j] + 1,
-        getDistance[i][j - 1] + 1,
-        getDistance[i - 1][j - 1] + (first[i - 1] === second[j - 1] ? 0 : 1)
+  for (let i = 1; i <= m; i++) {
+    curr[0] = i;
+    for (let j = 1; j <= n; j++) {
+      curr[j] = minBy(
+        prev[j] + 1,
+        curr[j - 1] + 1,
+        prev[j - 1] + (first[i - 1] === second[j - 1] ? 0 : 1)
       );
     }
+    const tmp = prev;
+    prev = curr;
+    curr = tmp;
   }
 
-  memo[first + '||' + second] = getDistance[first.length][second.length];
-
-  return getDistance[first.length][second.length];
+  memo[key] = prev[n];
+  return prev[n];
 }
 
 export function correctByDistance(

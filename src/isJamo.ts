@@ -88,8 +88,9 @@ export function isCompleteHangulByGroups(word: string = ""): boolean[] {
  * @example isDoubleConsonant("ㄲ") → true
  * @example isDoubleConsonant("ㄱ") → false
  */
+const doubles = new Set(["ㄲ", "ㄸ", "ㅃ", "ㅆ", "ㅉ"]);
+
 export function isDoubleConsonant(word: string = ""): boolean {
-  const doubles = new Set(["ㄲ", "ㄸ", "ㅃ", "ㅆ", "ㅉ"]);
   if (!word) return false;
   for (let i = 0; i < word.length; i++) {
     if (!doubles.has(word[i])) return false;

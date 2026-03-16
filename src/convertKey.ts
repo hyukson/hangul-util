@@ -7,19 +7,21 @@ import { reverseByObject } from "./utils";
 const REVERSE_MAPS: Record<string, string> = reverseByObject(KEY_MAPS);
 
 function toKo(english: string = "") {
-  return english
-    .toString()
-    .split("")
-    .map((char) => REVERSE_MAPS[char] || char)
-    .join("");
+  const str = english.toString();
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    result += REVERSE_MAPS[str[i]] || str[i];
+  }
+  return result;
 }
 
 function toEn(korean: string = "") {
-  return korean
-    .toString()
-    .split("")
-    .map((char) => KEY_MAPS[char] || char)
-    .join("");
+  const str = korean.toString();
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    result += KEY_MAPS[str[i]] || str[i];
+  }
+  return result;
 }
 
 export function convertKey(

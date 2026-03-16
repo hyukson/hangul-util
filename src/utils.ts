@@ -22,14 +22,12 @@ export function zeroPad(
   pow: number = 0,
   pad: string = "0"
 ) {
-  let result = string.toString();
-  const padString = pad.toString();
+  const result = string.toString();
+  const count = pow - result.length;
 
-  for (let i = pow - result.length; i > 0; i--) {
-    result = padString + result;
-  }
+  if (count <= 0) return result;
 
-  return result;
+  return pad.toString().repeat(count) + result;
 }
 
 export function chunkAtEnd(value: string = "", n: number = 1) {
@@ -79,12 +77,12 @@ export function reverseByObject(object: any) {
 export function reverseByArray(array: any) {
   const result: any = [];
 
-  for (let index = 0; index < array.length; index++) {
+  for (let index = array.length - 1; index >= 0; index--) {
     if (Array.isArray(array[index])) {
       array[index] = reverseByArray(array[index]);
     }
 
-    result.unshift(array[index]);
+    result.push(array[index]);
   }
 
   return result;
