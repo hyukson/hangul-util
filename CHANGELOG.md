@@ -1,6 +1,56 @@
 # Changelog
 
-## [Unreleased]
+## [2.0.0]
+
+버그 수정 과정에서 일부 함수의 **반환값이 달라졌다**. 대부분 명백한 오동작을 고친 것이지만,
+기존 동작에 기대고 있었다면 아래를 확인해야 한다.
+
+### ⚠️ Breaking Changes
+
+**1. `sortByASC` / `sortByDESC`가 원본 배열을 변경하지 않는다**
+
+기존에는 인자로 받은 배열을 제자리 정렬해 호출한 쪽의 배열까지 바뀌었다.
+이제 새 배열을 반환하고 원본은 그대로 둔다.
+
+```ts
+const arr = ["다", "가", "나"];
+sortByASC(arr);
+
+// v1: arr === ["가", "나", "다"]  (원본이 바뀜)
+// v2: arr === ["다", "가", "나"]  (원본 유지)
+```
+
+반환값을 쓰던 코드(README에 안내된 사용법)는 영향이 없다.
+부수효과에 기대던 코드는 반환값을 대입하도록 바꾸면 된다.
+
+```ts
+// 이전 동작이 필요하면
+const sorted = sortByASC(arr);
+```
+
+**2. 잘못된 결과를 내던 입력의 반환값이 바뀐다**
+
+| 호출 | v1 (버그) | v2 |
+| --- | --- | --- |
+| `hangulToNumber("구십")` | `1e32` | `90` |
+| `hangulToNumber("구")` | `1e32` | `9` |
+| `josa("서울", "으로")` | `"으로"` | `"로"` |
+| `getLocal("가&#124;나")` | `"ko"` | `"etc"` |
+| `formatDate("잘못된 값")` | `"NaN년NaN월..."` | `""` |
+| `getLocalByGroups("", true)` | 전부 `NaN` | 전부 `0` |
+| `sinoKoreanNumber(1e21)` | 깨진 문자열 | `""` |
+| `includesByCho("(", ...)` | 예외 발생 | 정상 동작 |
+
+### 호환성을 위해 유지한 것
+
+- **빌드 산출물은 계속 ES2015** — `target`을 올리면 지원 런타임 범위가 줄어들어 되돌렸다.
+  타입 검사 강화(`lib`, `noUnusedLocals` 등)는 컴파일 타임에만 영향을 주므로 그대로 두었다.
+- **`prepare` 스크립트 유지** — `npm i github:...` 같은 git URL 직접 설치가 계속 동작하도록 남겼다.
+  다만 `jest && tsup`에서 빌드만 하도록 바꿔 `npm install`마다 전체 테스트가 돌지 않는다.
+- **`engines` 필드 미추가** — 선언하면 기존 사용자에게 `EBADENGINE` 경고가 새로 뜬다.
+- **`utils`의 매개변수 타입** — `reverseByObject`, `makePercentByObject`, `reverseByArray`는
+  타입을 좁히면 인덱스 시그니처 없는 interface를 넘기던 기존 코드가 컴파일되지 않아
+  기존 시그니처를 유지하고 동작만 고쳤다.
 
 ### New Features
 - **유니코드 정규화** — `normalizeHangul`, `toCompatibilityJamo`, `toConjoiningJamo`, `hasConjoiningJamo`
@@ -36,10 +86,12 @@
 
 ### Build System
 - 죽은 설정 파일 제거 — `webpack.config.js`, `.babelrc` (webpack/babel은 이미 의존성에서 빠져 있어 동작하지 않는 상태였음)
-- `prepare` 스크립트 제거 — `npm install`마다 전체 테스트가 돌던 문제. 대신 `prepublishOnly`로 빌드만 보장한다.
+- `prepare` 스크립트를 `jest && tsup` → `npm run build`로 변경 — git URL 직접 설치 지원은 유지하면서
+  `npm install`마다 전체 테스트가 돌지 않게 했다.
 - `typecheck` 스크립트 추가 + CI/publish 워크플로에 타입 검사 단계 추가
-- `tsconfig` 강화 — `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns` 등 추가, `target` es2015 → es2020, 테스트 코드도 타입 검사 대상에 포함
-- `package.json` — `engines`(node >= 18), `publishConfig`, `unpkg`/`jsdelivr` 필드 추가
+- `tsconfig` 강화 — `lib` 명시, `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns` 등 추가,
+  테스트 코드도 타입 검사 대상에 포함. `target`은 산출물 호환성을 위해 es2015 유지.
+- `package.json` — `publishConfig`, `unpkg`/`jsdelivr` 필드 추가
 
 ### Tests
 - 회귀 테스트 및 신규 기능 테스트 추가 — 34개 → **37개** 스위트, 304개 → **351개** 테스트

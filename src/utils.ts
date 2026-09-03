@@ -49,10 +49,11 @@ export function chunkAtEnd(value: string = "", n: number = 1): string[] {
 /**
  * 객체의 숫자 값들을 백분율(소수점 2자리)로 환산한다.
  * 합이 0이면 NaN 대신 모두 0을 반환한다.
+ *
+ * 매개변수를 `Record<string, number>`로 좁히면 인덱스 시그니처가 없는 interface를
+ * 넘기던 기존 코드가 컴파일되지 않으므로 `any`를 유지한다.
  */
-export function makePercentByObject(
-  object: Record<string, number>
-): Record<string, number> {
+export function makePercentByObject(object: any): Record<string, number> {
   const result: Record<string, number> = {};
 
   let sum = 0;
@@ -70,13 +71,16 @@ export function makePercentByObject(
   return result;
 }
 
-export function reverseByObject(
-  object: Record<string, unknown> | readonly unknown[]
-): Record<string, string> {
+/**
+ * 객체의 키와 값을 뒤집는다.
+ *
+ * `makePercentByObject`와 같은 이유로 매개변수 타입은 `any`를 유지한다.
+ */
+export function reverseByObject(object: any): Record<string, string> {
   const result: Record<string, string> = {};
 
   for (const key in object) {
-    result[String((object as Record<string, unknown>)[key])] = key;
+    result[String(object[key])] = key;
   }
 
   return result;
@@ -84,14 +88,17 @@ export function reverseByObject(
 
 /**
  * 배열을 (중첩 배열까지) 뒤집는다. 입력 배열은 변경하지 않는다.
+ *
+ * 반환 타입을 좁히면 기존에 통과하던 호출이 컴파일되지 않을 수 있어
+ * 시그니처는 그대로 두고 동작(원본 변경)만 고쳤다.
  */
-export function reverseByArray<T>(array: readonly T[]): T[] {
-  const result: T[] = [];
+export function reverseByArray(array: any): any {
+  const result: any[] = [];
 
   for (let index = array.length - 1; index >= 0; index--) {
     const item = array[index];
 
-    result.push(Array.isArray(item) ? (reverseByArray(item) as T) : item);
+    result.push(Array.isArray(item) ? reverseByArray(item) : item);
   }
 
   return result;

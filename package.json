@@ -1,6 +1,6 @@
 {
   "name": "hangul-util",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "author": {
     "name": "Jang Hyuk Soo",
     "email": "hyuksoo128@gmail.com"
@@ -26,7 +26,7 @@
     "test": "jest --colors",
     "typecheck": "tsc --noEmit",
     "build": "tsup",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -70,9 +70,6 @@
     "ts-jest": "^29.0.5",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
-  },
-  "engines": {
-    "node": ">=18"
   },
   "publishConfig": {
     "access": "public"

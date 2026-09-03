@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target": "es2020",
+    // target은 빌드 산출물의 문법 수준을 정한다. 올리면 지원 런타임 범위가 줄어들므로
+    // 기존 사용자를 위해 es2015를 유지한다. (lib은 타입 검사에만 쓰여 산출물과 무관)
+    "target": "es2015",
     "lib": ["ES2020", "DOM"],
-    "module": "es2020",
+    "module": "es2015",
     "moduleResolution": "node",
     "declaration": true,
     "outDir": "./dist",

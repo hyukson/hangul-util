@@ -44,9 +44,7 @@ const makeRegByFormater = (array: SpeechRule[]): ReplaceRule[] => {
 };
 
 const BANMAL_REGEX_LIST = makeRegByFormater(formater);
-const HONORIFIC_REGEX_LIST = makeRegByFormater(
-  reverseByArray(formater) as SpeechRule[]
-);
+const HONORIFIC_REGEX_LIST = makeRegByFormater(reverseByArray(formater));
 
 export function toBanmal(string: string) {
   return BANMAL_REGEX_LIST.reduce(
