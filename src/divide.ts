@@ -4,27 +4,51 @@ import {
   JONG_HANGUL,
   JUNG_COMPLETE_HANGUL,
   JONG_COMPLETE_HANGUL,
-  CHO_PERIOD,
-  JONG_PERIOD,
-  HANGUL_START_CHARCODE,
 } from "./constant";
 
 import { isHangulByCode } from "./isHangul";
-import { DivideOptionTypes } from "./types";
+import { decomposeCode } from "./syllable";
+import {
+  DivideOptionTypes,
+  DividedIndex,
+  DividedJamo,
+  DividedResult,
+} from "./types";
 
-export function divide(word: string = "", option: DivideOptionTypes = {}) {
+/** 한 글자를 초/중/종성 인덱스로 반환한다. */
+export function divide(
+  word: string | undefined,
+  option: DivideOptionTypes & { resultType: "index" }
+): DividedIndex | string[];
+/** 한 글자를 초/중/종성 문자열 객체로 반환한다. */
+export function divide(
+  word: string | undefined,
+  option: DivideOptionTypes & { resultType: "object" }
+): DividedJamo | string[];
+/** 한 글자를 이어붙인 자모 문자열로 반환한다. */
+export function divide(
+  word: string | undefined,
+  option: DivideOptionTypes & { resultType: "string" }
+): string | string[];
+/** 한 글자를 자모 배열로 반환한다. (기본값) */
+export function divide(
+  word?: string,
+  option?: DivideOptionTypes
+): DividedResult;
+export function divide(
+  word: string = "",
+  option: DivideOptionTypes = {}
+): DividedResult {
   const { isSplit, resultType } = option;
 
   const wordCode = word.charCodeAt(0);
-  const charCode = wordCode - HANGUL_START_CHARCODE;
 
   if (!isHangulByCode(wordCode)) {
     return [word[0]];
   }
 
-  const choIndex = Math.floor(charCode / CHO_PERIOD);
-  const jungIndex = Math.floor((charCode % CHO_PERIOD) / JONG_PERIOD);
-  const jongIndex = charCode % JONG_PERIOD;
+  const { cho: choIndex, jung: jungIndex, jong: jongIndex } =
+    decomposeCode(wordCode);
 
   const cho = CHO_HANGUL[choIndex] || "";
   const jung = JUNG_HANGUL[jungIndex] || "";
@@ -67,7 +91,8 @@ export function divideHangul(word: string = "", isSplit: boolean = true) {
   const result: string[] = [];
 
   for (let i = 0; i < str.length; i++) {
-    const divided = divide(str[i], { isSplit, resultType: "string" }) as string;
+    // 한글이면 자모 문자열, 아니면 원본 한 글자짜리 배열. 둘 다 인덱스로 순회 가능하다.
+    const divided = divide(str[i], { isSplit, resultType: "string" });
     for (let j = 0; j < divided.length; j++) result.push(divided[j]);
   }
 

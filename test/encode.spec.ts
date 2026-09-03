@@ -1,6 +1,6 @@
 import { encode, decode } from "../src/encode";
 
-describe("formatNumber", () => {
+describe("encode / decode", () => {
   test("문자", () => {
     expect(decode(encode("구오"))).toEqual("구오");
   });

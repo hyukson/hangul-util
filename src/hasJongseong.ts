@@ -1,5 +1,9 @@
-import { HANGUL_START_CHARCODE, JONG_PERIOD } from "./constant";
 import { isHangulByCode } from "./isHangul";
+import { getJongIndex } from "./syllable";
+
+function codeHasJong(code: number): boolean {
+  return isHangulByCode(code) && getJongIndex(code) > 0;
+}
 
 /**
  * 마지막 글자에 받침(종성)이 있는지 확인
@@ -8,9 +12,8 @@ import { isHangulByCode } from "./isHangul";
  */
 export function hasJongseong(word: string = ""): boolean {
   if (!word) return false;
-  const lastChar = word.charCodeAt(word.length - 1);
-  if (!isHangulByCode(lastChar)) return false;
-  return (lastChar - HANGUL_START_CHARCODE) % JONG_PERIOD > 0;
+
+  return codeHasJong(word.charCodeAt(word.length - 1));
 }
 
 /**
@@ -18,9 +21,11 @@ export function hasJongseong(word: string = ""): boolean {
  * @example hasJongseongByGroups("한글아") → [true, true, false]
  */
 export function hasJongseongByGroups(word: string = ""): boolean[] {
-  return word.split("").map((char) => {
-    const code = char.charCodeAt(0);
-    if (!isHangulByCode(code)) return false;
-    return (code - HANGUL_START_CHARCODE) % JONG_PERIOD > 0;
-  });
+  const result: boolean[] = [];
+
+  for (let i = 0; i < word.length; i++) {
+    result.push(codeHasJong(word.charCodeAt(i)));
+  }
+
+  return result;
 }

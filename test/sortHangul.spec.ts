@@ -143,12 +143,20 @@ describe("sortByDESC", () => {
       { user: { name: "apple", age: 42 }, lastConnect: "2022-02-22 22:22:22" },
       { user: { name: "kiwi", age: 12 }, lastConnect: "2022-02-22 22:22:22" },
     ]);
+    // 정렬은 원본을 변경하지 않으므로 매번 최초 순서를 기준으로 정렬된다.
     expect(sortByDESC(array, "user.name[0]")).toEqual([
-      { user: { name: "kiwi", age: 42 }, lastConnect: "2022-02-22 22:22:22" },
       { user: { name: "kiwi", age: 12 }, lastConnect: "2022-02-22 22:22:22" },
+      { user: { name: "kiwi", age: 42 }, lastConnect: "2022-02-22 22:22:22" },
       { user: { name: "apple", age: 42 }, lastConnect: "2022-02-22 22:22:22" },
       { user: { name: "apple", age: 42 }, lastConnect: "2022-02-22 22:22:22" },
     ]);
+  });
+
+  test("원본 배열을 변경하지 않는다", () => {
+    const array = ["다", "가", "나"];
+
+    expect(sortByDESC(array)).toEqual(["다", "나", "가"]);
+    expect(array).toEqual(["다", "가", "나"]);
   });
 
   test("시간초과 테스트", () => {

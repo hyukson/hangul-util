@@ -72,24 +72,22 @@ export function ordinal(n: number): string {
 /**
  * 숫자를 한자어 수사(순한글)로 변환
  * @example sinoKoreanNumber(123) → "백이십삼"
- * @example sinoKoreanNumber(10000) → "만"
+ * @example sinoKoreanNumber(10000) → "일만"
  * @example sinoKoreanNumber(0) → "영"
  */
 export function sinoKoreanNumber(n: number): string {
-  if (!Number.isInteger(n) || n < 0) return "";
+  // 1e21 이상은 String(n)이 지수 표기("1e+21")가 되어 자릿수 계산이 깨진다.
+  if (!Number.isSafeInteger(n) || n < 0) return "";
   if (n === 0) return "영";
 
   const str = String(n);
+
+  // 뒤에서부터 4자리씩 끊는다. chunks[0]이 1의 자리 묶음이다.
   const chunks: string[] = [];
-  let start = str.length;
 
-  while (start > 0) {
-    const end = start;
-    start = Math.max(0, start - 4);
-    chunks.unshift(str.substring(start, end));
+  for (let end = str.length; end > 0; end -= 4) {
+    chunks.push(str.substring(Math.max(0, end - 4), end));
   }
-
-  chunks.reverse();
 
   const parts: string[] = [];
 

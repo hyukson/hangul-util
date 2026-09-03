@@ -4,12 +4,10 @@ import {
   JONG_HANGUL,
   JUNG_COMPLETE_HANGUL,
   JONG_COMPLETE_HANGUL,
-  CHO_PERIOD,
-  JONG_PERIOD,
-  HANGUL_START_CHARCODE,
 } from "./constant";
 import { isHangulByCode } from "./isHangul";
 import { combineByCode } from "./combine";
+import { decomposeCode } from "./syllable";
 
 /**
  * 타이핑 효과를 위한 한글 분해 (각 자모가 추가되는 중간 과정 생성)
@@ -30,10 +28,8 @@ export function disassembleForTyping(text: string): string[] {
       continue;
     }
 
-    const charCode = code - HANGUL_START_CHARCODE;
-    const choIndex = Math.floor(charCode / CHO_PERIOD);
-    const jungIndex = Math.floor((charCode % CHO_PERIOD) / JONG_PERIOD);
-    const jongIndex = charCode % JONG_PERIOD;
+    const { cho: choIndex, jung: jungIndex, jong: jongIndex } =
+      decomposeCode(code);
 
     // Step 1: 초성
     result.push(accumulated + CHO_HANGUL[choIndex]);

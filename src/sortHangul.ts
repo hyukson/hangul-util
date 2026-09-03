@@ -1,6 +1,6 @@
 import { splitByKey, getNestedProperty, reverseByObject } from "./utils";
 
-const intlCollator = Intl.Collator("ko");
+const intlCollator = new Intl.Collator("ko");
 
 function baseCompare(str1: any, str2: any, orderASC: boolean) {
   if (orderASC) {
@@ -15,10 +15,13 @@ function baseSortBy(
   compare?: string[] | string,
   orderASC: boolean = true
 ) {
+  // 원본 배열을 변경하지 않도록 복사본을 정렬한다.
+  const sorted = array.slice();
+
   if (Array.isArray(compare)) {
     const keys = compare.map((x) => splitByKey(x));
 
-    return array.sort((a, b) => {
+    return sorted.sort((a, b) => {
       for (let i = 0; i < compare.length; i++) {
         const result = baseCompare(
           getNestedProperty(keys[i], a),
@@ -34,12 +37,12 @@ function baseSortBy(
   }
 
   if (!compare) {
-    return array.sort((a, b) => baseCompare(a, b, orderASC));
+    return sorted.sort((a, b) => baseCompare(a, b, orderASC));
   }
 
   const keys = splitByKey(compare);
 
-  return array.sort((a, b) =>
+  return sorted.sort((a, b) =>
     baseCompare(
       getNestedProperty(keys, a),
       getNestedProperty(keys, b),

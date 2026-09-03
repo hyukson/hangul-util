@@ -37,6 +37,9 @@
 | **문자 정렬** | `sortByASC`, `sortByDESC`, `sortByGroups` | 한글 정렬 |
 | **언어 감지** | `getLocal`, `getLocalByGroups` | 한글/영문/숫자/특수문자 감지 |
 | **암호화** | `encode`, `decode` | 문자열/배열/객체 인코딩 |
+| **유니코드 정규화** | `normalizeHangul`, `toCompatibilityJamo`, `toConjoiningJamo`, `hasConjoiningJamo` | NFD(조합형 자모) 한글 정규화 |
+| **바이트 길이** | `getByteLength`, `sliceByByte` | UTF-8 / EUC-KR 바이트 계산 및 자르기 |
+| **전각/반각** | `toHalfWidth`, `toFullWidth` | 전각↔반각 변환 |
 
 ---
 
@@ -267,13 +270,19 @@ pronounce("좋아");  // "조아"
 
 ### romanize (국립국어원 표기법)
 
-`romanize(text: string, options?: { capitalize?: boolean, separator?: string })`
+`romanize(text: string, options?: { capitalize?: boolean, separator?: string, usePronunciation?: boolean })`
 
 ```ts
 romanize("한글");                         // "hangeul"
 romanize("대한민국");                      // "daehanminguk"
 romanize("서울", { capitalize: true });   // "Seoul"
 romanize("부산", { capitalize: true });   // "Busan"
+
+// 표기법은 원칙적으로 "소리 나는 대로" 적도록 정하고 있다.
+// usePronunciation을 켜면 변환 전에 표준 발음법을 먼저 적용한다.
+romanize("신라");                              // "sinra"
+romanize("신라", { usePronunciation: true });  // "silla"
+romanize("국물", { usePronunciation: true });  // "gungmul"
 ```
 
 ### normalize (발음 기반)
@@ -304,9 +313,13 @@ sinoKoreanNumber(123);
 
 ```ts
 hangulToNumber("백이십삼");        // 123
+hangulToNumber("구십");           // 90
 hangulToNumber("삼만 오천");       // 35000
 hangulToNumber("일억 이천삼백만");  // 123000000
 ```
+
+> "구"처럼 숫자 낱자와 글자가 겹치는 큰 수 단위(10^32)는 숫자로 읽는다.
+> 해당 단위는 어차피 `Number`로 정확히 표현할 수 없는 범위다.
 
 ---
 
@@ -382,6 +395,14 @@ formatJosa("사과[을/를]");    // "사과를"
 ```ts
 josa("인생", "란");  // "이란"
 josa("사과", "을");  // "를"
+
+// ㄹ 받침 뒤에서는 "으로"가 아니라 "로"
+josa("서울", "으로");  // "로"
+josa("부산", "으로");  // "으로"
+
+// 숫자는 읽는 소리로 받침을 판단한다 (1=일, 2=이 ...)
+josa("1", "은");  // "은"
+josa("2", "은");  // "는"
 ```
 
 > 은/는, 이/가, 을/를, 와/과, 으로/로, 이나/나, 이에/에, 이란/란, 아/야, 이여/여, 이든/든, 이랑/랑, 이나마/나마, 이야말로/야말로, 이며/며, 이라도/라도, 이라면/라면, 이라고/라고 지원
@@ -482,6 +503,8 @@ correctByDistance("num", ["number", "string", "boolean"], option);
 
 ## 문자 정렬
 
+> 정렬 함수는 원본 배열을 변경하지 않고 새 배열을 반환한다.
+
 ```ts
 sortByASC(["사과", "귤", "바나나"]);
 // ["귤", "바나나", "사과"]
@@ -535,6 +558,74 @@ decode(encoded);  // "테스트123"
 
 const encoded2 = encode(["바나나", "자두", "귤"]);
 decode(encoded2);  // ["바나나", "자두", "귤"]
+```
+
+---
+
+## 유니코드 정규화 (NFD / 조합형 자모)
+
+유니코드에는 한글 자모가 두 벌 있다. 이 라이브러리를 포함한 대부분의 코드가 쓰는
+**호환 자모**(`ㄱ` U+3131)와, 완성형을 NFD로 분해하면 나오는 **조합형 자모**(`ᄀ` U+1100)다.
+
+macOS 파일명, 일부 API 응답, 일부 입력기는 조합형 자모를 그대로 넘긴다.
+겉보기 글자가 같아서 눈으로는 구분되지 않지만, 값이 달라 한글 함수들이 **조용히 실패**한다.
+
+```ts
+const nfd = "한글".normalize("NFD");  // macOS 파일명 등에서 흔히 들어오는 형태
+
+nfd.length;            // 6  (눈에는 2글자로 보인다)
+isHangul(nfd);         // false ⚠️
+extractHangul(nfd);    // ""    ⚠️ 한글이 없다고 판단
+hangulIncludes(nfd, "ㅎㄱ");  // false ⚠️
+
+// 외부 입력은 먼저 정규화한다
+const text = normalizeHangul(nfd);  // "한글"
+
+isHangul(text);         // true
+extractHangul(text);    // "한글"
+getChoseong(text);      // "ㅎㄱ"
+hangulIncludes(text, "ㅎㄱ");  // true
+```
+
+```ts
+hasConjoiningJamo("한글");                    // false
+hasConjoiningJamo("한글".normalize("NFD"));   // true
+
+toCompatibilityJamo("한글".normalize("NFD")); // "ㅎㅏㄴㄱㅡㄹ"
+toConjoiningJamo("ㄱ");                       // "ᄀ" (초성)
+toConjoiningJamo("ㄱ", "jong");               // "ᆨ" (종성)
+```
+
+---
+
+## 바이트 길이
+
+SMS 90바이트 제한, DB `varchar` 크기, 입력 길이 제한 등에 쓴다.
+
+`getByteLength(text, encoding?: "utf8" | "euc-kr")`
+
+```ts
+getByteLength("한글");            // 6  (UTF-8: 한글 3바이트)
+getByteLength("한글", "euc-kr");  // 4  (EUC-KR: 한글 2바이트)
+getByteLength("한글abc");         // 9
+```
+
+`sliceByByte(text, maxBytes, encoding?)` — 글자 중간에서 잘리지 않는다.
+
+```ts
+sliceByByte("안녕하세요", 6);            // "안녕"
+sliceByByte("안녕하세요", 8);            // "안녕"   (한 글자가 더 안 들어감)
+sliceByByte("안녕하세요", 6, "euc-kr");  // "안녕하"
+```
+
+---
+
+## 전각/반각 변환
+
+```ts
+toHalfWidth("ＡＢＣ１２３");   // "ABC123"
+toHalfWidth("한글　테스트");    // "한글 테스트"  (전각 공백도 변환)
+toFullWidth("ABC");           // "ＡＢＣ"
 ```
 
 ---

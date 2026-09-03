@@ -1,6 +1,6 @@
 import { formatJosa, josa } from "../src/josa";
 
-describe("formatJosa", () => {
+describe("josa", () => {
   test("조사", () => {
     expect(josa("영희", '는')).toEqual('는');
   });

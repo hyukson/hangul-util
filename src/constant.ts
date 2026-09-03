@@ -47,6 +47,14 @@ export const JUNG_END_CHARCODE = JUNG_HANGUL[JUNG_HANGUL.length-1].charCodeAt(0)
 export const JONG_START_CHARCODE = JONG_HANGUL[1].charCodeAt(0);
 export const JONG_END_CHARCODE = JONG_HANGUL[JONG_HANGUL.length-1].charCodeAt(0);
 
+// 호환 자모 영역 (U+3131 ~ U+3163)
+export const JAMO_START_CHARCODE = 0x3131; // ㄱ
+export const JAMO_END_CHARCODE = 0x3163; // ㅣ
+export const CONSONANT_START_CHARCODE = 0x3131; // ㄱ
+export const CONSONANT_END_CHARCODE = 0x314e; // ㅎ
+export const VOWEL_START_CHARCODE = 0x314f; // ㅏ
+export const VOWEL_END_CHARCODE = 0x3163; // ㅣ
+
 export const HANGUL_START_CHARCODE = '가'.charCodeAt(0);
 export const HANGUL_END_CHARCODE = '힣'.charCodeAt(0);
 

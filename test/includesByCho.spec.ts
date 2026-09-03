@@ -1,6 +1,6 @@
 import { includesByCho, makeRegexByCho } from "../src/includesByCho";
 
-describe("includesByCho", () => {
+describe("makeRegexByCho", () => {
   test("가나다라마바사", () => {
     const search = "ㄱ나다라마바ㅅ";
     expect(makeRegexByCho(search)).toEqual(/([가-깋]나다라마바[사-싷])/g);

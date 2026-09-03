@@ -1,12 +1,15 @@
-import { HANGUL_START_CHARCODE, HANGUL_END_CHARCODE } from "./constant";
+import {
+  HANGUL_START_CHARCODE,
+  HANGUL_END_CHARCODE,
+  JAMO_START_CHARCODE,
+  JAMO_END_CHARCODE,
+} from "./constant";
 
-const JAMO_START = 0x3131;
-const JAMO_END = 0x3163;
-
+/** 완성형 한글 또는 호환 자모인지 확인한다. */
 function isHangulChar(code: number): boolean {
   return (
     (code >= HANGUL_START_CHARCODE && code <= HANGUL_END_CHARCODE) ||
-    (code >= JAMO_START && code <= JAMO_END)
+    (code >= JAMO_START_CHARCODE && code <= JAMO_END_CHARCODE)
   );
 }
 
@@ -15,10 +18,13 @@ function isHangulChar(code: number): boolean {
  * @example extractHangul("hello안녕world세계") → "안녕세계"
  */
 export function extractHangul(word: string = ""): string {
-  return word
-    .split("")
-    .filter((char) => isHangulChar(char.charCodeAt(0)))
-    .join("");
+  let result = "";
+
+  for (let i = 0; i < word.length; i++) {
+    if (isHangulChar(word.charCodeAt(i))) result += word[i];
+  }
+
+  return result;
 }
 
 /**
@@ -38,10 +44,13 @@ export function containsHangul(word: string = ""): boolean {
  * @example removeHangul("hello안녕world") → "helloworld"
  */
 export function removeHangul(word: string = ""): string {
-  return word
-    .split("")
-    .filter((char) => !isHangulChar(char.charCodeAt(0)))
-    .join("");
+  let result = "";
+
+  for (let i = 0; i < word.length; i++) {
+    if (!isHangulChar(word.charCodeAt(i))) result += word[i];
+  }
+
+  return result;
 }
 
 /**

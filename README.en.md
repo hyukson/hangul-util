@@ -28,7 +28,10 @@ The most comprehensive Korean Hangul utility library — Jamo decomposition/comp
 | **Typing Effect** | `disassembleForTyping` | Generate intermediate steps for Hangul typing animation |
 | **Keyboard Conversion** | `convertKey` | Convert between Korean/English keyboard layout |
 | **Fuzzy Match** | `correctByDistance`, `getDistance` | Levenshtein distance-based word similarity |
-| **Sorting** | `sortByASC`, `sortByDESC`, `sortByGroups` | Korean-aware sorting |
+| **Sorting** | `sortByASC`, `sortByDESC`, `sortByGroups` | Korean-aware sorting (returns a new array) |
+| **Unicode normalization** | `normalizeHangul`, `toCompatibilityJamo`, `toConjoiningJamo`, `hasConjoiningJamo` | Handles NFD / conjoining jamo |
+| **Byte length** | `getByteLength`, `sliceByByte` | UTF-8 / EUC-KR byte counting and truncation |
+| **Width** | `toHalfWidth`, `toFullWidth` | Full-width ↔ half-width |
 | **Language Detection** | `getLocal`, `getLocalByGroups` | Detect Korean/English/number/special characters |
 | **Encoding** | `encode`, `decode` | String/array/object encoding |
 
@@ -118,6 +121,11 @@ pronounce("좋아");  // "조아" (ㅎ-deletion)
 romanize("한글");                        // "hangeul"
 romanize("서울", { capitalize: true });  // "Seoul"
 romanize("부산", { capitalize: true });  // "Busan"
+
+// The standard transcribes pronunciation, not spelling.
+// Enable usePronunciation to apply sound-change rules first.
+romanize("신라");                              // "sinra"
+romanize("신라", { usePronunciation: true });  // "silla"
 ```
 
 ## Number Conversion
@@ -126,6 +134,7 @@ romanize("부산", { capitalize: true });  // "Busan"
 formatNumber(123456789);          // "1억 2345만 6789"
 formatNumberAll(123456789);       // "일억 이천삼백사십오만 육천칠백팔십구"
 hangulToNumber("백이십삼");        // 123
+hangulToNumber("구십");           // 90
 sinoKoreanNumber(123);            // "백이십삼"
 ```
 
@@ -151,6 +160,14 @@ months(10); // "시월"
 ```ts
 formatJosa("사과[을/를] 먹다");  // "사과를 먹다"
 josa("사과", "을");              // "를"
+
+// "으로/로" takes "로" after a ㄹ final consonant
+josa("서울", "으로");            // "로"
+josa("부산", "으로");            // "으로"
+
+// Digits are judged by how they are read (1 = 일, 2 = 이 ...)
+josa("1", "은");                 // "은"
+josa("2", "은");                 // "는"
 ```
 
 ## Typing Effect
@@ -174,3 +191,50 @@ For full documentation and more examples, see the [한국어 README](./README.md
 ## License
 
 MIT
+
+---
+
+## Unicode Normalization (NFD / conjoining jamo)
+
+Unicode has two sets of Hangul jamo: **compatibility jamo** (`ㄱ` U+3131), which this
+library uses, and **conjoining jamo** (`ᄀ` U+1100), which is what you get when a syllable
+is decomposed to NFD.
+
+macOS filenames and some APIs hand you conjoining jamo. It looks identical on screen but
+the code points differ, so Hangul functions **fail silently**.
+
+```ts
+const nfd = "한글".normalize("NFD");
+
+isHangul(nfd);       // false ⚠️
+extractHangul(nfd);  // ""    ⚠️ reports no Hangul at all
+
+const text = normalizeHangul(nfd);  // "한글"
+
+isHangul(text);      // true
+getChoseong(text);   // "ㅎㄱ"
+```
+
+---
+
+## Byte Length
+
+For SMS limits, DB `varchar` sizing, and input length checks.
+
+```ts
+getByteLength("한글");            // 6  (UTF-8)
+getByteLength("한글", "euc-kr");  // 4
+
+// Never splits a character in half
+sliceByByte("안녕하세요", 6);            // "안녕"
+sliceByByte("안녕하세요", 6, "euc-kr");  // "안녕하"
+```
+
+---
+
+## Full-width / Half-width
+
+```ts
+toHalfWidth("ＡＢＣ１２３");  // "ABC123"
+toFullWidth("ABC");          // "ＡＢＣ"
+```
