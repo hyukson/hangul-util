@@ -3,7 +3,13 @@ import { reverseByArray } from "./utils";
 const FIRST_REGEX = /(\s)?(^[가-힣]{0,3}|[가-힣]{1,3})(\s*)/;
 const LAST_REGEX = /([\.|\,|\s])/;
 
-const formater = [
+/** [바꿀 어미들, 바뀐 어미들] 쌍 */
+type SpeechRule = [string[], string[]];
+
+/** [찾을 정규식, 치환 문자열] 쌍 */
+type ReplaceRule = [RegExp, string];
+
+const formater: SpeechRule[] = [
   [["습니다"], ["다"]],
   [["주세요"], ["라"]],
   [["입니다"], ["이다"]],
@@ -17,27 +23,21 @@ const formater = [
   [["저는"], ["나는"]],
 ];
 
-const makeRegByFormater = (array: any) => {
-  const result: string[] = [];
+const makeRegByFormater = (array: SpeechRule[]): ReplaceRule[] => {
+  const result: ReplaceRule[] = [];
 
-  array.forEach((caseList: any) => {
-    const case1List = caseList[0].map(
-      (case1: string) =>
-        new RegExp(FIRST_REGEX.source + case1 + LAST_REGEX.source, "g")
-    );
+  array.forEach(([from, to]) => {
+    from.forEach((case1) => {
+      const regex = new RegExp(
+        FIRST_REGEX.source + case1 + LAST_REGEX.source,
+        "g"
+      );
 
-    const list = case1List.reduce(
-      (acc2: RegExp[], regex: RegExp) =>
-        acc2.concat(
-          caseList[1].map((case2: string) => [
-            regex,
-            `$1;$2;$3;${case2.split("").join(";")};$4`,
-          ])
-        ),
-      []
-    );
-
-    result.push(...list);
+      to.forEach((case2) => {
+        // 치환된 글자가 다시 다른 규칙에 걸리지 않도록 ";"로 구분해 두고 마지막에 제거한다.
+        result.push([regex, `$1;$2;$3;${case2.split("").join(";")};$4`]);
+      });
+    });
   });
 
   return result;
@@ -48,14 +48,14 @@ const HONORIFIC_REGEX_LIST = makeRegByFormater(reverseByArray(formater));
 
 export function toBanmal(string: string) {
   return BANMAL_REGEX_LIST.reduce(
-    (acc: string, [$1, $2]: any) => acc.replace($1, $2),
+    (acc, [pattern, replacement]) => acc.replace(pattern, replacement),
     string
-  ).replace(/;/g, "");
+  ).replace(/;/g, "");
 }
 
 export function toHonorific(string: string) {
   return HONORIFIC_REGEX_LIST.reduce(
-    (acc: string, [$1, $2]: any) => acc.replace($1, $2),
+    (acc, [pattern, replacement]) => acc.replace(pattern, replacement),
     string
-  ).replace(/;/g, "");
+  ).replace(/;/g, "");
 }

@@ -16,7 +16,17 @@ thousandUnits.forEach((unit, i) => {
   if (unit) THOUSAND_UNIT_MAP[unit] = Math.pow(10000, i);
 });
 
-const LARGE_UNITS = thousandUnits.filter((u) => u).reverse();
+/**
+ * 큰 수 단위 중 숫자 낱자(일~구)와 겹치지 않는 것만 사용한다.
+ *
+ * `thousandUnits`에는 10^32을 뜻하는 "구"가 들어있는데, 이는 숫자 9를 뜻하는
+ * "구"와 글자가 같다. 이를 단위로 인식하면 "구십"이 90이 아니라 10^32이 되고
+ * "삼백구십"은 3e34가 된다. 10^32은 어차피 배정밀도 실수로 정확히 표현할 수
+ * 없는 범위이므로, 겹치는 단위는 숫자 낱자 해석을 우선한다.
+ */
+const LARGE_UNITS = thousandUnits
+  .filter((unit) => unit && SINO_DIGIT_MAP[unit] === undefined)
+  .reverse();
 
 function parseSmallHangul(hangul: string): number {
   let result = 0;
@@ -41,6 +51,7 @@ function parseSmallHangul(hangul: string): number {
 /**
  * 한글 숫자를 숫자로 변환
  * @example hangulToNumber("백이십삼") → 123
+ * @example hangulToNumber("구십") → 90
  * @example hangulToNumber("삼만 오천") → 35000
  * @example hangulToNumber("일억 이천삼백만") → 123000000
  */

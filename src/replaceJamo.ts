@@ -1,22 +1,7 @@
-import {
-  CHO_HANGUL,
-  JUNG_HANGUL,
-  JONG_HANGUL,
-  CHO_PERIOD,
-  JONG_PERIOD,
-  HANGUL_START_CHARCODE,
-} from "./constant";
+import { CHO_HANGUL, JUNG_HANGUL, JONG_HANGUL } from "./constant";
 import { isHangulByCode } from "./isHangul";
 import { combineByCode } from "./combine";
-
-function decomposeChar(code: number) {
-  const charCode = code - HANGUL_START_CHARCODE;
-  return {
-    cho: Math.floor(charCode / CHO_PERIOD),
-    jung: Math.floor((charCode % CHO_PERIOD) / JONG_PERIOD),
-    jong: charCode % JONG_PERIOD,
-  };
-}
+import { decomposeCode } from "./syllable";
 
 /**
  * 종성을 제거
@@ -28,7 +13,7 @@ export function removeJongseong(word: string = ""): string {
     .map((char) => {
       const code = char.charCodeAt(0);
       if (!isHangulByCode(code)) return char;
-      const { cho, jung } = decomposeChar(code);
+      const { cho, jung } = decomposeCode(code);
       return combineByCode(cho, jung, 0);
     })
     .join("");
@@ -47,7 +32,7 @@ export function replaceChoseong(
     .map((char, i) => {
       const code = char.charCodeAt(0);
       if (!isHangulByCode(code)) return char;
-      const { cho, jung, jong } = decomposeChar(code);
+      const { cho, jung, jong } = decomposeCode(code);
       const newCho = replacer(CHO_HANGUL[cho], i);
       const newChoIndex = CHO_HANGUL.indexOf(newCho);
       if (newChoIndex === -1) return char;
@@ -69,7 +54,7 @@ export function replaceJungseong(
     .map((char, i) => {
       const code = char.charCodeAt(0);
       if (!isHangulByCode(code)) return char;
-      const { cho, jung, jong } = decomposeChar(code);
+      const { cho, jung, jong } = decomposeCode(code);
       const newJung = replacer(JUNG_HANGUL[jung], i);
       const newJungIndex = JUNG_HANGUL.indexOf(newJung);
       if (newJungIndex === -1) return char;
@@ -91,7 +76,7 @@ export function replaceJongseong(
     .map((char, i) => {
       const code = char.charCodeAt(0);
       if (!isHangulByCode(code)) return char;
-      const { cho, jung, jong } = decomposeChar(code);
+      const { cho, jung, jong } = decomposeCode(code);
       const newJong = replacer(JONG_HANGUL[jong], i);
       const newJongIndex = JONG_HANGUL.indexOf(newJong);
       if (newJongIndex === -1) return char;

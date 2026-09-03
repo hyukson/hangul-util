@@ -124,8 +124,10 @@ export function combineHangul(str: string | (string | string[])[] = "") {
   return result.join("");
 }
 
-const REVERSE_JUNG_COMPLETE = reverseByObject(JUNG_COMPLETE_HANGUL);
-const REVERSE_JONG_COMPLETE = reverseByObject(JONG_COMPLETE_HANGUL);
+/** 분리된 복합 중성 → 합쳐진 중성 (예: "ㅗㅏ" → "ㅘ") */
+export const REVERSE_JUNG_COMPLETE = reverseByObject(JUNG_COMPLETE_HANGUL);
+/** 분리된 복합 종성 → 합쳐진 종성 (예: "ㅂㅅ" → "ㅄ") */
+export const REVERSE_JONG_COMPLETE = reverseByObject(JONG_COMPLETE_HANGUL);
 
 export function combineByJung(jung: string) {
   return REVERSE_JUNG_COMPLETE[jung] || jung;

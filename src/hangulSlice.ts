@@ -4,22 +4,14 @@ import {
   JONG_HANGUL,
   JUNG_COMPLETE_HANGUL,
   JONG_COMPLETE_HANGUL,
-  CHO_PERIOD,
-  JONG_PERIOD,
-  HANGUL_START_CHARCODE,
 } from "./constant";
 import { isHangulByCode } from "./isHangul";
-import { combineByCode } from "./combine";
-
-const reverseJung: Record<string, string> = {};
-for (const [k, v] of Object.entries(JUNG_COMPLETE_HANGUL)) {
-  reverseJung[v] = k;
-}
-
-const reverseJong: Record<string, string> = {};
-for (const [k, v] of Object.entries(JONG_COMPLETE_HANGUL)) {
-  reverseJong[v] = k;
-}
+import {
+  combineByCode,
+  REVERSE_JUNG_COMPLETE as reverseJung,
+  REVERSE_JONG_COMPLETE as reverseJong,
+} from "./combine";
+import { decomposeCode } from "./syllable";
 
 /**
  * 한글을 자모 단위로 분해하여 배열 반환 (타이핑/슬라이스용)
@@ -38,10 +30,8 @@ export function hangulToJamo(text: string): string[] {
       continue;
     }
 
-    const charCode = code - HANGUL_START_CHARCODE;
-    const choIndex = Math.floor(charCode / CHO_PERIOD);
-    const jungIndex = Math.floor((charCode % CHO_PERIOD) / JONG_PERIOD);
-    const jongIndex = charCode % JONG_PERIOD;
+    const { cho: choIndex, jung: jungIndex, jong: jongIndex } =
+      decomposeCode(code);
 
     result.push(CHO_HANGUL[choIndex]);
 

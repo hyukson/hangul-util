@@ -1,12 +1,6 @@
-import {
-  CHO_HANGUL,
-  JUNG_HANGUL,
-  JONG_HANGUL,
-  CHO_PERIOD,
-  JONG_PERIOD,
-  HANGUL_START_CHARCODE,
-} from "./constant";
+import { CHO_HANGUL, JUNG_HANGUL, JONG_HANGUL } from "./constant";
 import { isHangulByCode } from "./isHangul";
+import { decomposeCode } from "./syllable";
 
 interface FrequencyResult {
   cho: Record<string, number>;
@@ -31,10 +25,8 @@ export function hangulFrequency(text: string): FrequencyResult {
     const code = text.charCodeAt(i);
     if (!isHangulByCode(code)) continue;
 
-    const charCode = code - HANGUL_START_CHARCODE;
-    const choIndex = Math.floor(charCode / CHO_PERIOD);
-    const jungIndex = Math.floor((charCode % CHO_PERIOD) / JONG_PERIOD);
-    const jongIndex = charCode % JONG_PERIOD;
+    const { cho: choIndex, jung: jungIndex, jong: jongIndex } =
+      decomposeCode(code);
 
     const choChar = CHO_HANGUL[choIndex];
     const jungChar = JUNG_HANGUL[jungIndex];

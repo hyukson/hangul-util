@@ -1,11 +1,27 @@
 import { divideHangul } from "./divide";
 import { sortByASC } from "./sortHangul";
 
-function minBy(x1: number, x2: number, x3: number) {
-  return x1 > x2 ? (x2 > x3 ? x3 : x2) : x3 > x1 ? x1 : x3;
+/**
+ * 메모이제이션 캐시 상한.
+ * 상한이 없으면 장시간 실행되는 프로세스에서 캐시가 무한히 커진다.
+ */
+const MEMO_LIMIT = 5000;
+
+const memo = new Map<string, number>();
+
+function getMemo(key: string): number | undefined {
+  return memo.get(key);
 }
 
-const memo: any = {};
+function setMemo(key: string, value: number) {
+  if (memo.size >= MEMO_LIMIT) {
+    // 가장 오래된 항목부터 비운다. (Map은 삽입 순서를 유지한다)
+    const oldest = memo.keys().next();
+    if (!oldest.done) memo.delete(oldest.value);
+  }
+
+  memo.set(key, value);
+}
 
 // levenshtein distance
 export function getDistance(first: string, second: string): number {
@@ -13,8 +29,9 @@ export function getDistance(first: string, second: string): number {
   if (!first) return second.length;
   if (!second) return first.length;
 
-  const key = first + '||' + second;
-  if (memo[key]) return memo[key];
+  const key = first + "||" + second;
+  const cached = getMemo(key);
+  if (cached !== undefined) return cached;
 
   const m = first.length;
   const n = second.length;
@@ -27,7 +44,7 @@ export function getDistance(first: string, second: string): number {
   for (let i = 1; i <= m; i++) {
     curr[0] = i;
     for (let j = 1; j <= n; j++) {
-      curr[j] = minBy(
+      curr[j] = Math.min(
         prev[j] + 1,
         curr[j - 1] + 1,
         prev[j - 1] + (first[i - 1] === second[j - 1] ? 0 : 1)
@@ -38,7 +55,7 @@ export function getDistance(first: string, second: string): number {
     curr = tmp;
   }
 
-  memo[key] = prev[n];
+  setMemo(key, prev[n]);
   return prev[n];
 }
 

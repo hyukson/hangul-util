@@ -19,6 +19,9 @@ export function formatDate(
 ) {
   const date = new Date(_date);
 
+  // 잘못된 날짜를 그대로 두면 "NaN년NaN월..." 같은 문자열이 나온다.
+  if (isNaN(date.getTime())) return "";
+
   const year = zeroPad(date.getFullYear(), 4, "0");
   const month = date.getMonth() + 1;
   const day = date.getDate();

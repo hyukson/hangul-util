@@ -26,12 +26,6 @@ export function formatNumber(format: number | string | null = "") {
 
   const parts = format?.toString?.()?.replace(/,/g, "")?.split?.(".") || [];
 
-  const result = [];
-
-  for (let i = 0; i < parts.length; i++) {
-    result.push(formatter(parts[i]));
-  }
-
   return parts?.map?.(formatter)?.join?.(" 점 ")?.trim?.() || "";
 }
 

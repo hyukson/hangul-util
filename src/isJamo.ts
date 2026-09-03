@@ -1,11 +1,25 @@
-import { HANGUL_START_CHARCODE, HANGUL_END_CHARCODE } from "./constant";
+import {
+  HANGUL_START_CHARCODE,
+  HANGUL_END_CHARCODE,
+  JAMO_START_CHARCODE,
+  JAMO_END_CHARCODE,
+  CONSONANT_START_CHARCODE,
+  CONSONANT_END_CHARCODE,
+  VOWEL_START_CHARCODE,
+  VOWEL_END_CHARCODE,
+} from "./constant";
 
-const JAMO_START = 0x3131; // ㄱ
-const JAMO_END = 0x3163;   // ㅣ
-const CONSONANT_START = 0x3131; // ㄱ
-const CONSONANT_END = 0x314E;   // ㅎ
-const VOWEL_START = 0x314F; // ㅏ
-const VOWEL_END = 0x3163;   // ㅣ
+/** 문자열의 모든 글자가 주어진 코드 범위 안에 있는지 확인한다. */
+function everyCharInRange(word: string, start: number, end: number): boolean {
+  if (!word) return false;
+
+  for (let i = 0; i < word.length; i++) {
+    const code = word.charCodeAt(i);
+    if (code < start || code > end) return false;
+  }
+
+  return true;
+}
 
 /**
  * 자모(ㄱ-ㅣ)인지 확인
@@ -13,22 +27,21 @@ const VOWEL_END = 0x3163;   // ㅣ
  * @example isJamo("가") → false
  */
 export function isJamo(word: string = ""): boolean {
-  if (!word) return false;
-  for (let i = 0; i < word.length; i++) {
-    const code = word.charCodeAt(i);
-    if (code < JAMO_START || code > JAMO_END) return false;
-  }
-  return true;
+  return everyCharInRange(word, JAMO_START_CHARCODE, JAMO_END_CHARCODE);
 }
 
 /**
  * 각 글자가 자모인지 배열로 반환
  */
 export function isJamoByGroups(word: string = ""): boolean[] {
-  return word.split("").map((char) => {
-    const code = char.charCodeAt(0);
-    return code >= JAMO_START && code <= JAMO_END;
-  });
+  const result: boolean[] = [];
+
+  for (let i = 0; i < word.length; i++) {
+    const code = word.charCodeAt(i);
+    result.push(code >= JAMO_START_CHARCODE && code <= JAMO_END_CHARCODE);
+  }
+
+  return result;
 }
 
 /**
@@ -37,12 +50,11 @@ export function isJamoByGroups(word: string = ""): boolean[] {
  * @example isConsonant("ㅏ") → false
  */
 export function isConsonant(word: string = ""): boolean {
-  if (!word) return false;
-  for (let i = 0; i < word.length; i++) {
-    const code = word.charCodeAt(i);
-    if (code < CONSONANT_START || code > CONSONANT_END) return false;
-  }
-  return true;
+  return everyCharInRange(
+    word,
+    CONSONANT_START_CHARCODE,
+    CONSONANT_END_CHARCODE
+  );
 }
 
 /**
@@ -51,12 +63,7 @@ export function isConsonant(word: string = ""): boolean {
  * @example isVowel("ㄱ") → false
  */
 export function isVowel(word: string = ""): boolean {
-  if (!word) return false;
-  for (let i = 0; i < word.length; i++) {
-    const code = word.charCodeAt(i);
-    if (code < VOWEL_START || code > VOWEL_END) return false;
-  }
-  return true;
+  return everyCharInRange(word, VOWEL_START_CHARCODE, VOWEL_END_CHARCODE);
 }
 
 /**
@@ -65,35 +72,38 @@ export function isVowel(word: string = ""): boolean {
  * @example isCompleteHangul("ㄱ") → false
  */
 export function isCompleteHangul(word: string = ""): boolean {
-  if (!word) return false;
-  for (let i = 0; i < word.length; i++) {
-    const code = word.charCodeAt(i);
-    if (code < HANGUL_START_CHARCODE || code > HANGUL_END_CHARCODE) return false;
-  }
-  return true;
+  return everyCharInRange(word, HANGUL_START_CHARCODE, HANGUL_END_CHARCODE);
 }
 
 /**
  * 각 글자가 완성형 한글인지 배열로 반환
  */
 export function isCompleteHangulByGroups(word: string = ""): boolean[] {
-  return word.split("").map((char) => {
-    const code = char.charCodeAt(0);
-    return code >= HANGUL_START_CHARCODE && code <= HANGUL_END_CHARCODE;
-  });
+  const result: boolean[] = [];
+
+  for (let i = 0; i < word.length; i++) {
+    const code = word.charCodeAt(i);
+    result.push(
+      code >= HANGUL_START_CHARCODE && code <= HANGUL_END_CHARCODE
+    );
+  }
+
+  return result;
 }
+
+const DOUBLE_CONSONANTS = new Set(["ㄲ", "ㄸ", "ㅃ", "ㅆ", "ㅉ"]);
 
 /**
  * 쌍자음인지 확인
  * @example isDoubleConsonant("ㄲ") → true
  * @example isDoubleConsonant("ㄱ") → false
  */
-const doubles = new Set(["ㄲ", "ㄸ", "ㅃ", "ㅆ", "ㅉ"]);
-
 export function isDoubleConsonant(word: string = ""): boolean {
   if (!word) return false;
+
   for (let i = 0; i < word.length; i++) {
-    if (!doubles.has(word[i])) return false;
+    if (!DOUBLE_CONSONANTS.has(word[i])) return false;
   }
+
   return true;
 }

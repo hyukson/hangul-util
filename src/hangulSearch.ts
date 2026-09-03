@@ -1,11 +1,27 @@
 import { makeRegexByCho } from "./includesByCho";
 import { CHO_HANGUL } from "./constant";
 
+const CHO_SET = new Set(CHO_HANGUL);
+
 function hasChoChar(str: string): boolean {
   for (let i = 0; i < str.length; i++) {
-    if (CHO_HANGUL.includes(str[i])) return true;
+    if (CHO_SET.has(str[i])) return true;
   }
   return false;
+}
+
+/** 정규식 메타문자를 이스케이프한다. */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/** 검색어를 초성 검색 또는 리터럴 검색 정규식으로 만든다. */
+function makeSearchRegex(search: string, flags: string = "g"): RegExp {
+  const source = hasChoChar(search)
+    ? makeRegexByCho(search).source
+    : `(${escapeRegex(search)})`;
+
+  return new RegExp(source, flags);
 }
 
 /**
@@ -33,9 +49,7 @@ export function hangulStartsWith(word: string, search: string): boolean {
   if (word.startsWith(search)) return true;
 
   if (hasChoChar(search)) {
-    const choRegex = makeRegexByCho(search);
-    const startRegex = new RegExp("^" + choRegex.source);
-    return startRegex.test(word);
+    return new RegExp("^" + makeRegexByCho(search).source).test(word);
   }
 
   return false;
@@ -50,11 +64,7 @@ export function hangulEndsWith(word: string, search: string): boolean {
   if (word.endsWith(search)) return true;
 
   if (hasChoChar(search)) {
-    const regex = new RegExp(makeRegexByCho(search).source, "g");
-    const matches = [...word.matchAll(regex)];
-    if (matches.length === 0) return false;
-    const lastMatch = matches[matches.length - 1];
-    return lastMatch.index! + lastMatch[0].length === word.length;
+    return new RegExp(makeRegexByCho(search).source + "$").test(word);
   }
 
   return false;
@@ -79,15 +89,16 @@ export function hangulHighlight(
 ): { matched: boolean; ranges: [number, number][] } {
   if (!word || !search) return { matched: false, ranges: [] };
 
-  const regex = hasChoChar(search)
-    ? new RegExp(makeRegexByCho(search).source, "g")
-    : new RegExp(`(${search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "g");
+  const regex = makeSearchRegex(search, "g");
 
   const ranges: [number, number][] = [];
   let match: RegExpExecArray | null;
 
   while ((match = regex.exec(word)) !== null) {
     ranges.push([match.index, match.index + match[0].length]);
+
+    // 빈 문자열에 매칭되면 lastIndex가 진행되지 않아 무한 루프가 된다.
+    if (match[0].length === 0) regex.lastIndex++;
   }
 
   return { matched: ranges.length > 0, ranges };

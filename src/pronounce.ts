@@ -1,29 +1,8 @@
-import {
-  CHO_PERIOD,
-  JONG_PERIOD,
-  HANGUL_START_CHARCODE,
-} from "./constant";
 import { isHangulByCode } from "./isHangul";
-
-interface Syllable {
-  cho: number;
-  jung: number;
-  jong: number;
-}
-
-function decompose(code: number): Syllable {
-  const charCode = code - HANGUL_START_CHARCODE;
-  return {
-    cho: Math.floor(charCode / CHO_PERIOD),
-    jung: Math.floor((charCode % CHO_PERIOD) / JONG_PERIOD),
-    jong: charCode % JONG_PERIOD,
-  };
-}
+import { Syllable, decomposeCode, composeCode } from "./syllable";
 
 function compose(s: Syllable): string {
-  return String.fromCharCode(
-    HANGUL_START_CHARCODE + s.cho * CHO_PERIOD + s.jung * JONG_PERIOD + s.jong
-  );
+  return String.fromCharCode(composeCode(s.cho, s.jung, s.jong));
 }
 
 // 종성 index → 초성 index 매핑 (연음용)
@@ -145,7 +124,7 @@ export function pronounce(text: string): string {
   for (let i = 0; i < chars.length; i++) {
     const code = chars[i].charCodeAt(0);
     if (isHangulByCode(code)) {
-      syllables.push({ ...decompose(code) });
+      syllables.push(decomposeCode(code));
       nonHangul.push(null);
     } else {
       syllables.push(null);

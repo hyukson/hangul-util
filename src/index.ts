@@ -1,8 +1,8 @@
 // 한글 판별
-export { isCho, isChoByGroups } from "./isCho";
-export { isJung, isJungByGroups } from "./isJung";
-export { isJong, isJongByGroups } from "./isJong";
-export { isHangul, isHangulByGroups } from "./isHangul";
+export { isCho, isChoByChar, isChoByGroups } from "./isCho";
+export { isJung, isJungByCode, isJungByGroups } from "./isJung";
+export { isJong, isJongByCode, isJongByGroups } from "./isJong";
+export { isHangul, isHangulByCode, isHangulByGroups } from "./isHangul";
 export {
   isJamo,
   isJamoByGroups,
@@ -15,13 +15,20 @@ export {
 
 // 한글 분리/결합
 export {
+  divide,
   divideByJong,
   divideByJung,
   divideHangul,
   divideHangulByGroups,
 } from "./divide";
 
-export { combineHangul, combineByJung, combineByJong } from "./combine";
+export {
+  combine,
+  combineHangul,
+  combineByCode,
+  combineByJung,
+  combineByJong,
+} from "./combine";
 
 // 초성/중성/종성 추출
 export { getChoseong, getJungseong, getJongseong } from "./choseong";
@@ -107,5 +114,39 @@ export * from "./getLocal";
 // 인코딩
 export * from "./encode";
 
+// 유니코드 정규화 (조합형 자모 / NFD)
+export {
+  normalizeHangul,
+  toCompatibilityJamo,
+  toConjoiningJamo,
+  hasConjoiningJamo,
+} from "./jamoNormalize";
+
+// 바이트 길이
+export { getByteLength, sliceByByte } from "./byteLength";
+export type { ByteEncoding } from "./byteLength";
+
+// 전각/반각
+export { toHalfWidth, toFullWidth } from "./width";
+
 // 유틸리티
 export * from "./utils";
+
+// 타입
+export type {
+  LocalTypes,
+  DivideOptionTypes,
+  TypingOptionTypes,
+  DividedIndex,
+  DividedJamo,
+  DividedResult,
+} from "./types";
+export type { RomanizeOptions } from "./romanize";
+export type { Syllable } from "./syllable";
+export {
+  decomposeCode,
+  composeCode,
+  getChoIndex,
+  getJungIndex,
+  getJongIndex,
+} from "./syllable";
